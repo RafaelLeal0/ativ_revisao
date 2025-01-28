@@ -16,6 +16,16 @@ if ($conn->connect_error) {
     die("Falha na conexão: " . $conn->connect_error);
 }
 
+// Consulta para pegar o nome do usuário
+$usuario_id = $_SESSION['usuario_id'];
+$sql_usuario = "SELECT nome FROM usuarios WHERE id = ?";
+$stmt = $conn->prepare($sql_usuario);
+$stmt->bind_param("i", $usuario_id);
+$stmt->execute();
+$stmt->bind_result($usuario_nome);
+$stmt->fetch();
+$stmt->close();
+
 $sql_itens = "SELECT id, nome, descricao FROM itens";
 $result_itens = $conn->query($sql_itens);
 
@@ -38,62 +48,100 @@ $result_desenhos = $conn->query($sql_desenhos);
             background-color: #f4f7fc;
             color: #4a4a4a;
             line-height: 1.6;
-            text-align: center;  /* Alinhando todo o texto do body ao centro */
         }
-    
+
+        nav {
+            background-color: #007bff;
+            padding: 10px;
+            color: white;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        nav span {
+            font-size: 1.2em;
+        }
+
+        .content {
+            display: flex;
+            justify-content: space-between;
+            padding: 30px;
+        }
+
+        .left-content {
+            width: 70%;
+        }
+
+        .right-content {
+            width: 28%;
+        }
+
         h1, h2 {
             color: #007bff;
             font-weight: 700;
             margin-bottom: 20px;
             letter-spacing: 0.5px;
         }
-    
+        
+        h1{
+            margin-left: 500px;
+        }
         h2 {
             font-size: 1.6em;
         }
-    
+
         .container {
-            max-width: 800px;  /* Ajustando o tamanho da container */
+            max-width: 100%;
             margin: 0 auto;
             padding: 30px;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
-    
+
+        .box {
+            width: 100%;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            margin-left: 150px;
+        }
+
         table {
-            width: 80%;  /* Tabela menor */
-            margin: 0 auto 20px;  /* Centralizando a tabela */
+            width: 100%;
+            margin-bottom: 20px;
             border-collapse: collapse;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
-    
+
         table, th, td {
             border: 1px solid #e3e3e3;
         }
-    
+
         th, td {
-            padding: 12px 15px;  /* Ajustando o espaçamento */
-            text-align: center;  /* Centralizando o conteúdo nas células */
+            padding: 12px 15px;
+            text-align: center;
             font-size: 1.1em;
             transition: background-color 0.3s ease;
         }
-    
+
         th {
             background-color: #007bff;
             color: white;
             font-size: 1.1em;
             font-weight: 600;
         }
-    
+
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
-    
+
         tr:hover {
             background-color: #e9ecef;
         }
-    
+
         .logout-btn {
             display: inline-block;
             padding: 12px 24px;
@@ -105,17 +153,18 @@ $result_desenhos = $conn->query($sql_desenhos);
             transition: all 0.3s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
+            margin-left: 150px;
         }
-    
+
         .logout-btn:hover {
             background-color: #c82333;
             transform: translateY(-2px);
         }
-    
+
         .logout-btn:active {
             transform: translateY(2px);
         }
-    
+
         form select {
             padding: 12px;
             border-radius: 5px;
@@ -126,65 +175,74 @@ $result_desenhos = $conn->query($sql_desenhos);
             margin-top: 15px;
             transition: border-color 0.3s ease;
         }
-    
+
         form select:focus {
             border-color: #007bff;
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
-    
+
         .container h2, .container table, .container form {
             margin-bottom: 40px;
         }
     </style>
-    
 </head>
 <body>
+    <nav>
+        <span>Bem-vindo, <?= htmlspecialchars($usuario_nome) ?>!</span>
+    </nav>
 
-<h1>Bem-vindo!</h1>
+    <div class="content">
+        <div class="left-content">
+            <h1>Bem-vindo ao Dashboard!</h1>
 
-<h2>Lista de Itens</h2>
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Descrição</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php if ($result_itens->num_rows > 0): ?>
-            <?php while ($row = $result_itens->fetch_assoc()): ?>
-                <tr>
-                    <td><?= htmlspecialchars($row['id']) ?></td>
-                    <td><?= htmlspecialchars($row['nome']) ?></td>
-                    <td><?= htmlspecialchars($row['descricao']) ?></td>
-                </tr>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <tr>
-                <td colspan="3">Nenhum item encontrado.</td>
-            </tr>
-        <?php endif; ?>
-    </tbody>
-</table>
+            <div class="box">
+                <h2>Lista de Itens</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Descrição</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if ($result_itens->num_rows > 0): ?>
+                            <?php while ($row = $result_itens->fetch_assoc()): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($row['id']) ?></td>
+                                    <td><?= htmlspecialchars($row['nome']) ?></td>
+                                    <td><?= htmlspecialchars($row['descricao']) ?></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="3">Nenhum item encontrado.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
 
-<h2>Selecione um Desenho</h2>
-<form>
-    <select name="desenho" id="desenho">
-        <?php if ($result_desenhos->num_rows > 0): ?>
-            <?php while ($row = $result_desenhos->fetch_assoc()): ?>
-                <option value="<?= htmlspecialchars($row['id']) ?>">
-                    <?= htmlspecialchars($row['nome']) ?>
-                </option>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <option value="">Nenhum desenho disponível</option>
-        <?php endif; ?>
-    </select>
-</form>
+            <div class="box">
+                <h2>Selecione um Desenho</h2>
+                <form>
+                    <select name="desenho" id="desenho">
+                        <?php if ($result_desenhos->num_rows > 0): ?>
+                            <?php while ($row = $result_desenhos->fetch_assoc()): ?>
+                                <option value="<?= htmlspecialchars($row['id']) ?>">
+                                    <?= htmlspecialchars($row['nome']) ?>
+                                </option>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <option value="">Nenhum desenho disponível</option>
+                        <?php endif; ?>
+                    </select>
+                </form>
+            </div>
 
-<br>
-<a href="logout.php" class="logout-btn">Logout</a>
+            <a href="logout.php" class="logout-btn">Logout</a>
+        </div>
+    </div>
 
 </body>
 </html>
