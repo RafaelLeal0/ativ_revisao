@@ -151,7 +151,6 @@ if (isset($_SESSION['showAlert'])) {
         }
     </script>";
 }
-
 unset($_SESSION['showAlert']);
 unset($_SESSION['errorMessage']);
 ?>

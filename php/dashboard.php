@@ -117,7 +117,6 @@ $result_produtos = $conn->query($sql_produtos);
 
 </body>
 </html>
-
 <?php
 $conn->close();
 ?>
