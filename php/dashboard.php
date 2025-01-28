@@ -26,7 +26,8 @@ $stmt->bind_result($usuario_nome);
 $stmt->fetch();
 $stmt->close();
 
-$sql_itens = "SELECT id, nome, descricao FROM itens";
+// Consulta para pegar os itens com as novas colunas
+$sql_itens = "SELECT id, nome, genero, lancamento, descricao FROM itens";
 $result_itens = $conn->query($sql_itens);
 
 $sql_desenhos = "SELECT id, nome FROM desenhos";
@@ -82,10 +83,7 @@ $result_desenhos = $conn->query($sql_desenhos);
             margin-bottom: 20px;
             letter-spacing: 0.5px;
         }
-        
-        h1{
-            margin-left: 500px;
-        }
+
         h2 {
             font-size: 1.6em;
         }
@@ -106,7 +104,6 @@ $result_desenhos = $conn->query($sql_desenhos);
             border-radius: 8px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
-            margin-left: 150px;
         }
 
         table {
@@ -153,7 +150,6 @@ $result_desenhos = $conn->query($sql_desenhos);
             transition: all 0.3s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
-            margin-left: 150px;
         }
 
         .logout-btn:hover {
@@ -202,6 +198,8 @@ $result_desenhos = $conn->query($sql_desenhos);
                         <tr>
                             <th>ID</th>
                             <th>Nome</th>
+                            <th>Gênero</th>
+                            <th>Lançamento</th>
                             <th>Descrição</th>
                         </tr>
                     </thead>
@@ -211,12 +209,14 @@ $result_desenhos = $conn->query($sql_desenhos);
                                 <tr>
                                     <td><?= htmlspecialchars($row['id']) ?></td>
                                     <td><?= htmlspecialchars($row['nome']) ?></td>
+                                    <td><?= htmlspecialchars($row['genero']) ?></td>
+                                    <td><?= htmlspecialchars($row['lancamento']) ?></td>
                                     <td><?= htmlspecialchars($row['descricao']) ?></td>
                                 </tr>
                             <?php endwhile; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="3">Nenhum item encontrado.</td>
+                                <td colspan="5">Nenhum item encontrado.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
