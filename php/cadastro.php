@@ -155,7 +155,6 @@ if (isset($_SESSION['showAlert'])) {
 unset($_SESSION['showAlert']);
 unset($_SESSION['errorMessage']);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -181,7 +180,6 @@ unset($_SESSION['errorMessage']);
             <input type="submit" value="Cadastrar">
         </form>
     </div>
-    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

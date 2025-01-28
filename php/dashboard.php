@@ -5,12 +5,10 @@ if (!isset($_SESSION['usuario_id'])) {
     header("Location: cadastro.php");
     exit();
 }
-
 $host = 'localhost';
 $user = 'root'; 
 $password = ''; 
 $database = 'sistema_login';
-
 $conn = new mysqli($host, $user, $password, $database);
 
 if ($conn->connect_error) {
